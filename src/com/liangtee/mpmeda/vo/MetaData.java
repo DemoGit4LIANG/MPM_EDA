@@ -1,61 +1,59 @@
 package com.liangtee.mpmeda.vo;
 
-public class MetaData
-{
-  private int ID = -1;
+public class MetaData {
 
-  private String classTag = null;
+    private int ID = -1;
 
-  private double[] properties = null;
+    private String classTag = null;
 
-  private boolean isClustered = false;
+    private double[] properties = null;
 
-  public MetaData(int ID, double[] properties, String classTag) {
-    this.ID = ID;
-    this.properties = properties;
-    this.classTag = classTag;
-  }
+    private boolean isClustered = false;
 
-  public int getID() {
-    return this.ID;
-  }
+    public MetaData(int ID, double[] properties, String classTag) {
+        this.ID = ID;
+        this.properties = properties;
+        this.classTag = classTag;
+    }
 
-  public void setID(int iD) {
-    this.ID = iD;
-  }
+    public int getID() {
+        return this.ID;
+    }
 
-  public String getClassTag() {
-    return this.classTag;
-  }
+    public void setID(int iD) {
+        this.ID = iD;
+    }
 
-  public void setClassTag(String classTag) {
-    this.classTag = classTag;
-  }
+    public String getClassTag() {
+        return this.classTag;
+    }
 
-  public double[] getProperties() {
-    return this.properties;
-  }
+    public void setClassTag(String classTag) {
+        this.classTag = classTag;
+    }
 
-  public void setProperties(double[] properties) {
-    this.properties = properties;
-  }
+    public double[] getProperties() {
+        return this.properties;
+    }
 
-  public boolean isClustered() {
-    return this.isClustered;
-  }
+    public void setProperties(double[] properties) {
+        this.properties = properties;
+    }
 
-  public void setClustered(boolean isClustered) {
-    this.isClustered = isClustered;
-  }
+    public boolean isClustered() {
+        return this.isClustered;
+    }
 
-  public boolean equals(Object obj)
-  {
-    if (getClass() != obj.getClass()) return false;
-    return this.ID == ((MetaData)obj).ID;
-  }
+    public void setClustered(boolean isClustered) {
+        this.isClustered = isClustered;
+    }
 
-  public int hashCode()
-  {
-    return this.ID;
-  }
+    public boolean equals(Object obj) {
+        if (getClass() != obj.getClass()) return false;
+        return this.ID == ((MetaData) obj).ID;
+    }
+
+    public int hashCode() {
+        return this.ID;
+    }
 }

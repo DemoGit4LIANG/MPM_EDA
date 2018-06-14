@@ -2,6 +2,7 @@ package com.liangtee.evaluator;
 
 import com.liangtee.mpmeda.vo.MetaCluster;
 import com.liangtee.mpmeda.vo.MetaData;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,58 +11,57 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-public class Evaluator
-{
-  public static List<MetaCluster> switcher(Map<Integer, List<MetaData>> clusters)
-  {
-    List clusterList = new ArrayList();
-    int idx = 1;
-    for (Map.Entry entry : clusters.entrySet()) {
-      List data = (List)entry.getValue();
-      Set set = new HashSet();
-      for (MetaData d : data) {
-        set.add(d);
-      }
-      MetaCluster cluster = new MetaCluster(0);
-      cluster.setCID(idx++);
-      cluster.addElements(set);
-      clusterList.add(cluster);
+public class Evaluator {
+
+    public static List<MetaCluster> switcher(Map<Integer, List<MetaData>> clusters) {
+        List<MetaCluster> clusterList = new ArrayList<MetaCluster>();
+        int idx = 1;
+        for (Entry<Integer, List<MetaData>> entry : clusters.entrySet()) {
+            List<MetaData> data = entry.getValue();
+            Set<MetaData> set = new HashSet<MetaData>();
+            for (MetaData metaData : data) {
+                set.add(metaData);
+            }
+            MetaCluster cluster = new MetaCluster(0);
+            cluster.setCID(idx++);
+            cluster.addElements(set);
+            clusterList.add(cluster);
+        }
+
+        return clusterList;
     }
 
-    return clusterList;
-  }
+    public static double evaluateResu(List<MetaCluster> clusters) {
+        int totElementNum = 0;
+        double totErrorNum = 0.0D;
+//        Map<String, Integer> correctClassTags = new HashMap<String, Integer>();
 
-  public static double evaluateResu(List<MetaCluster> clusters) {
-    int totElementNum = 0;
-    double totErrorNum = 0.0D;
-    Map correctClassTags = new HashMap();
+        for (MetaCluster cluster : clusters) {
+            Map<String, Integer> classMap = new HashMap<String, Integer>();
+            int clusterElementNum = 0;
+            for (MetaData data : cluster.getElements()) {
+                totElementNum++;
+                clusterElementNum++;
+                if (classMap.containsKey(data.getClassTag()))
+                    classMap.put(data.getClassTag(), classMap.get(data.getClassTag()) + 1);
+                else {
+                    classMap.put(data.getClassTag(), 1);
+                }
+            }
 
-    for (MetaCluster cluster : clusters) {
-      Map classMap = new HashMap();
-      int clusterElementNum = 0;
-      for (MetaData data : cluster.getElements()) {
-        totElementNum++;
-        clusterElementNum++;
-        if (classMap.containsKey(data.getClassTag()))
-          classMap.put(data.getClassTag(), Integer.valueOf(((Integer)classMap.get(data.getClassTag())).intValue() + 1));
-        else {
-          classMap.put(data.getClassTag(), Integer.valueOf(1));
+            String correctClassTag = null;
+            int correctNum = 0;
+            for (Entry<String, Integer> entry : classMap.entrySet()) {
+                if (entry.getValue() > correctNum) {
+                    correctNum = entry.getValue();
+                    correctClassTag = entry.getKey();
+                }
+            }
+//            correctClassTags.put(cluster.getCID(), correctClassTag);
+
+            totErrorNum += clusterElementNum - correctNum;
         }
-      }
 
-      String correctClassTag = null;
-      int correctNum = 0;
-      for (Map.Entry entry : classMap.entrySet()) {
-        if (((Integer)entry.getValue()).intValue() > correctNum) {
-          correctNum = ((Integer)entry.getValue()).intValue();
-          correctClassTag = (String)entry.getKey();
-        }
-      }
-      correctClassTags.put(Integer.valueOf(cluster.getCID()), correctClassTag);
-
-      totErrorNum += clusterElementNum - correctNum;
+        return totErrorNum / totElementNum;
     }
-
-    return totErrorNum / totElementNum;
-  }
 }
